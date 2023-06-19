@@ -30,7 +30,7 @@ class _MyCompState extends State<MyComp> {
       body: const Center(
         child: CustomImageCropper(
           imageType: ImageType.url,
-          image: '',
+          image: "https://picsum.photos/id/234/200/200",
         ),
       ),
     );

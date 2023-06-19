@@ -23,7 +23,6 @@ class CustomImageCropper extends StatefulWidget {
 }
 
 class _CustomImageCropperState extends State<CustomImageCropper> {
-  final image = "https://picsum.photos/id/234/200/200";
   final globalKey = GlobalKey();
 
   bool isCroped = false;
@@ -57,6 +56,38 @@ class _CustomImageCropperState extends State<CustomImageCropper> {
     setState(() {
       isLoading = !isLoading;
     });
+  }
+
+  getImageWidget(int formIndex) {
+    if (formIndex == 0) {
+      if (widget.imageType == ImageType.file) {
+        return FileImage(widget.image);
+      } else if (widget.imageType == ImageType.url) {
+        return NetworkImage(widget.image);
+      } else if (widget.imageType == ImageType.asset) {
+        return AssetImage(widget.image);
+      }
+    } else {
+      if (widget.imageType == ImageType.file) {
+        return Image.file(
+          widget.image,
+          fit: BoxFit.cover,
+          width: double.infinity,
+        );
+      } else if (widget.imageType == ImageType.url) {
+        return Image.network(
+          widget.image,
+          fit: BoxFit.cover,
+          width: double.infinity,
+        );
+      } else if (widget.imageType == ImageType.asset) {
+        return Image.asset(
+          widget.image,
+          fit: BoxFit.cover,
+          width: double.infinity,
+        );
+      }
+    }
   }
 
   Future saveImage() async {
@@ -95,7 +126,7 @@ class _CustomImageCropperState extends State<CustomImageCropper> {
                     : Container(
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: NetworkImage(image),
+                            image: getImageWidget(0),
                             fit: BoxFit.cover,
                             opacity: 0.32,
                           ),
@@ -152,11 +183,7 @@ class _CustomImageCropperState extends State<CustomImageCropper> {
                                           blY + (pointSize / 2)),
                                     ],
                                   ),
-                                  child: Image.network(
-                                    image,
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                  ),
+                                  child: getImageWidget(1),
                                 ),
                               ),
                               pointTL(),
