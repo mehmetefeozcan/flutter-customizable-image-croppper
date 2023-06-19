@@ -12,9 +12,14 @@ enum ImageType { url, file, asset }
 class CustomImageCropper extends StatefulWidget {
   final ImageType imageType;
   final dynamic image;
+  final double? width;
+  final double? height;
+
   const CustomImageCropper({
     required this.imageType,
     required this.image,
+    this.height,
+    this.width,
     super.key,
   });
 
@@ -138,31 +143,47 @@ class _CustomImageCropperState extends State<CustomImageCropper> {
                             linePoints: [
                               // Top Left - Top Right
                               [
-                                Offset(tlX + (pointSize / 2),
-                                    tlY + (pointSize / 2)),
-                                Offset(trX + (pointSize / 2),
-                                    trY + (pointSize / 2)),
+                                Offset(
+                                  tlX + (pointSize / 2),
+                                  tlY + (pointSize / 2),
+                                ),
+                                Offset(
+                                  trX + (pointSize / 2),
+                                  trY + (pointSize / 2),
+                                ),
                               ],
                               // Top Right - Bottom Right
                               [
-                                Offset(trX + (pointSize / 2),
-                                    trY + (pointSize / 2)),
-                                Offset(brX + (pointSize / 2),
-                                    brY + (pointSize / 2)),
+                                Offset(
+                                  trX + (pointSize / 2),
+                                  trY + (pointSize / 2),
+                                ),
+                                Offset(
+                                  brX + (pointSize / 2),
+                                  brY + (pointSize / 2),
+                                ),
                               ],
                               // Bottom Right - Bottom Left
                               [
-                                Offset(brX + (pointSize / 2),
-                                    brY + (pointSize / 2)),
-                                Offset(blX + (pointSize / 2),
-                                    blY + (pointSize / 2)),
+                                Offset(
+                                  brX + (pointSize / 2),
+                                  brY + (pointSize / 2),
+                                ),
+                                Offset(
+                                  blX + (pointSize / 2),
+                                  blY + (pointSize / 2),
+                                ),
                               ],
                               // Bottom Left - Top Left
                               [
-                                Offset(blX + (pointSize / 2),
-                                    blY + (pointSize / 2)),
-                                Offset(tlX + (pointSize / 2),
-                                    tlY + (pointSize / 2)),
+                                Offset(
+                                  blX + (pointSize / 2),
+                                  blY + (pointSize / 2),
+                                ),
+                                Offset(
+                                  tlX + (pointSize / 2),
+                                  tlY + (pointSize / 2),
+                                ),
                               ],
                             ],
                           ),
@@ -173,14 +194,22 @@ class _CustomImageCropperState extends State<CustomImageCropper> {
                                 child: ClipPath(
                                   clipper: MyImageClipper(
                                     points: [
-                                      Offset(tlX + (pointSize / 2),
-                                          tlY + (pointSize / 2)),
-                                      Offset(trX + (pointSize / 2),
-                                          trY + (pointSize / 2)),
-                                      Offset(brX + (pointSize / 2),
-                                          brY + (pointSize / 2)),
-                                      Offset(blX + (pointSize / 2),
-                                          blY + (pointSize / 2)),
+                                      Offset(
+                                        tlX + (pointSize / 2),
+                                        tlY + (pointSize / 2),
+                                      ),
+                                      Offset(
+                                        trX + (pointSize / 2),
+                                        trY + (pointSize / 2),
+                                      ),
+                                      Offset(
+                                        brX + (pointSize / 2),
+                                        brY + (pointSize / 2),
+                                      ),
+                                      Offset(
+                                        blX + (pointSize / 2),
+                                        blY + (pointSize / 2),
+                                      ),
                                     ],
                                   ),
                                   child: getImageWidget(1),
@@ -217,8 +246,14 @@ class _CustomImageCropperState extends State<CustomImageCropper> {
         child: customPointer(),
         onDragUpdate: (details) {
           setState(() {
+            if (details.globalPosition.dx >
+                    MediaQuery.of(context).size.width * 0.08 &&
+                details.globalPosition.dx <
+                    MediaQuery.of(context).size.width * 0.915) {
+              tlX = tlX + details.delta.dx;
+            }
+
             tlY = tlY + details.delta.dy;
-            tlX = tlX + details.delta.dx;
           });
         },
       ),
@@ -234,8 +269,13 @@ class _CustomImageCropperState extends State<CustomImageCropper> {
         child: customPointer(),
         onDragUpdate: (details) {
           setState(() {
+            if (details.globalPosition.dx >
+                    MediaQuery.of(context).size.width * 0.08 &&
+                details.globalPosition.dx <
+                    MediaQuery.of(context).size.width * 0.915) {
+              trX = trX + details.delta.dx;
+            }
             trY = trY + details.delta.dy;
-            trX = trX + details.delta.dx;
           });
         },
       ),
@@ -251,8 +291,13 @@ class _CustomImageCropperState extends State<CustomImageCropper> {
         child: customPointer(),
         onDragUpdate: (details) {
           setState(() {
+            if (details.globalPosition.dx >
+                    MediaQuery.of(context).size.width * 0.08 &&
+                details.globalPosition.dx <
+                    MediaQuery.of(context).size.width * 0.915) {
+              blX = blX + details.delta.dx;
+            }
             blY = blY + details.delta.dy;
-            blX = blX + details.delta.dx;
           });
         },
       ),
@@ -268,8 +313,13 @@ class _CustomImageCropperState extends State<CustomImageCropper> {
         child: customPointer(),
         onDragUpdate: (details) {
           setState(() {
+            if (details.globalPosition.dx >
+                    MediaQuery.of(context).size.width * 0.08 &&
+                details.globalPosition.dx <
+                    MediaQuery.of(context).size.width * 0.915) {
+              brX = brX + details.delta.dx;
+            }
             brY = brY + details.delta.dy;
-            brX = brX + details.delta.dx;
           });
         },
       ),
