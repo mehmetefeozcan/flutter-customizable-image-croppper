@@ -1,5 +1,5 @@
+import 'package:flutter_customizable_image_croppper/flutter_customizable_image_croppper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_customizable_image_cropper/crop_widget/crop_widget.dart';
 
 void main() => runApp(const MyApp());
 
