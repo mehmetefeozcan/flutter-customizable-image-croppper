@@ -82,19 +82,22 @@ class _CustomImageCropperState extends State<CustomImageCropper> {
         return Image.file(
           widget.image,
           fit: BoxFit.cover,
-          width: double.infinity,
+          width: widget.width ?? double.infinity,
+          height: widget.height ?? double.infinity,
         );
       } else if (widget.imageType == ImageType.url) {
         return Image.network(
           widget.image,
           fit: BoxFit.cover,
-          width: double.infinity,
+          width: widget.width ?? double.infinity,
+          height: widget.height ?? double.infinity,
         );
       } else if (widget.imageType == ImageType.asset) {
         return Image.asset(
           widget.image,
           fit: BoxFit.cover,
-          width: double.infinity,
+          width: widget.width ?? double.infinity,
+          height: widget.height ?? double.infinity,
         );
       }
     }
@@ -131,7 +134,11 @@ class _CustomImageCropperState extends State<CustomImageCropper> {
               children: [
                 isCroped
                     ? Center(
-                        child: Image.file(cropedImageFile),
+                        child: Image.file(
+                          cropedImageFile,
+                          width: widget.width ?? double.infinity,
+                          height: widget.height ?? double.infinity,
+                        ),
                       )
                     : Container(
                         decoration: BoxDecoration(
