@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_in_if_null_operators
+
 library flutter_customizable_image_croppper;
 
 import 'package:flutter/rendering.dart';
@@ -19,10 +21,14 @@ class CustomizableImageCropper extends StatefulWidget {
   final dynamic image;
   final double? width;
   final double? height;
+  final ButtonStyle? buttonStyle;
+  final String? buttonTitle;
 
   const CustomizableImageCropper({
     required this.imageType,
     required this.image,
+    this.buttonStyle,
+    this.buttonTitle,
     this.height,
     this.width,
     super.key,
@@ -237,13 +243,14 @@ class _CustomizableImageCropperState extends State<CustomizableImageCropper> {
                         ),
                       ),
                 ElevatedButton(
+                  style: widget.buttonStyle ?? null,
                   onPressed: () async {
                     changeLoading();
                     await saveImage();
                     changeCropState();
                     changeLoading();
                   },
-                  child: const Text("Save Image"),
+                  child: Text(widget.buttonTitle ?? "Save Image"),
                 )
               ],
             ),

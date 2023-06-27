@@ -34,6 +34,7 @@ class _MyCompState extends State<MyComp> {
         child: CustomizableImageCropper(
           imageType: ImageType.url,
           image: "https://picsum.photos/id/234/200/200",
+          buttonTitle: "Kaydet",
         ),
       ),
     );
