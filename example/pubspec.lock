@@ -81,11 +81,10 @@ packages:
   flutter_customizable_image_croppper:
     dependency: "direct main"
     description:
-      name: flutter_customizable_image_croppper
-      sha256: "706ef00d84c04efe7186c97c8374445dce905adc67598e4b89f983ffa87683ed"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.1"
+      path: ".."
+      relative: true
+    source: path
+    version: "0.0.5"
   flutter_lints:
     dependency: "direct dev"
     description:

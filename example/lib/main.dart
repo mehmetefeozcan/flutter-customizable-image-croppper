@@ -31,7 +31,7 @@ class _MyCompState extends State<MyComp> {
         title: const Text("My Library"),
       ),
       body: const Center(
-        child: CustomImageCropper(
+        child: CustomizableImageCropper(
           imageType: ImageType.url,
           image: "https://picsum.photos/id/234/200/200",
         ),

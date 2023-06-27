@@ -14,13 +14,13 @@ import 'src/my_painter.dart';
 
 enum ImageType { url, file, asset }
 
-class CustomImageCropper extends StatefulWidget {
+class CustomizableImageCropper extends StatefulWidget {
   final ImageType imageType;
   final dynamic image;
   final double? width;
   final double? height;
 
-  const CustomImageCropper({
+  const CustomizableImageCropper({
     required this.imageType,
     required this.image,
     this.height,
@@ -29,10 +29,11 @@ class CustomImageCropper extends StatefulWidget {
   });
 
   @override
-  State<CustomImageCropper> createState() => _CustomImageCropperState();
+  State<CustomizableImageCropper> createState() =>
+      _CustomizableImageCropperState();
 }
 
-class _CustomImageCropperState extends State<CustomImageCropper> {
+class _CustomizableImageCropperState extends State<CustomizableImageCropper> {
   final globalKey = GlobalKey();
 
   bool isCroped = false;
@@ -82,22 +83,22 @@ class _CustomImageCropperState extends State<CustomImageCropper> {
         return Image.file(
           widget.image,
           fit: BoxFit.cover,
-          width: widget.width ?? double.infinity,
-          height: widget.height ?? double.infinity,
+          width: widget.width ?? 280,
+          height: widget.height ?? 280,
         );
       } else if (widget.imageType == ImageType.url) {
         return Image.network(
           widget.image,
           fit: BoxFit.cover,
-          width: widget.width ?? double.infinity,
-          height: widget.height ?? double.infinity,
+          width: widget.width ?? 280,
+          height: widget.height ?? 280,
         );
       } else if (widget.imageType == ImageType.asset) {
         return Image.asset(
           widget.image,
           fit: BoxFit.cover,
-          width: widget.width ?? double.infinity,
-          height: widget.height ?? double.infinity,
+          width: widget.width ?? 280,
+          height: widget.height ?? 280,
         );
       }
     }
@@ -136,8 +137,8 @@ class _CustomImageCropperState extends State<CustomImageCropper> {
                     ? Center(
                         child: Image.file(
                           cropedImageFile,
-                          width: widget.width ?? double.infinity,
-                          height: widget.height ?? double.infinity,
+                          width: widget.width ?? 280,
+                          height: widget.height ?? 280,
                         ),
                       )
                     : Container(
