@@ -1,10 +1,10 @@
 name: flutter_customizable_image_croppper
 description: Flutter customizable image cropper widget
-version: 0.0.7
+version: 0.0.8
 homepage: https://github.com/mehmetefeozcan/flutter-customizable-image-croppper/blob/main/README.md
 
 environment:
-  sdk: ">=2.19.6 <3.0.0"
+  sdk: ">=2.19.6 <4.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
