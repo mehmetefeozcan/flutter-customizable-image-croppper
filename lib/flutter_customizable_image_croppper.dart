@@ -17,21 +17,15 @@ import 'src/my_painter.dart';
 enum ImageType { url, file, asset }
 
 class CustomizableImageCropper extends StatefulWidget {
-  final ImageType imageType;
-  final dynamic image;
-  final double? width;
+  final CropController controller;
   final double? height;
-  final ButtonStyle? buttonStyle;
-  final String? buttonTitle;
-  final Function(dynamic image)? onCrop;
+  final double? width;
+  final EdgeInsets? padding;
 
   const CustomizableImageCropper({
-    required this.imageType,
-    required this.image,
-    this.buttonStyle,
-    this.buttonTitle,
+    required this.controller,
+    this.padding,
     this.height,
-    this.onCrop,
     this.width,
     super.key,
   });
@@ -42,12 +36,6 @@ class CustomizableImageCropper extends StatefulWidget {
 }
 
 class _CustomizableImageCropperState extends State<CustomizableImageCropper> {
-  final globalKey = GlobalKey();
-
-  bool isCroped = false;
-  bool isLoading = false;
-  File cropedImageFile = File('');
-
   // Top Left
   double tlX = 0;
   double tlY = 0;
@@ -67,43 +55,43 @@ class _CustomizableImageCropperState extends State<CustomizableImageCropper> {
 
   changeCropState() {
     setState(() {
-      isCroped = !isCroped;
+      widget.controller.isCroped = !widget.controller.isCroped;
     });
   }
 
   changeLoading() {
     setState(() {
-      isLoading = !isLoading;
+      widget.controller.isLoading = !widget.controller.isLoading;
     });
   }
 
   getImageWidget(int formIndex) {
     if (formIndex == 0) {
-      if (widget.imageType == ImageType.file) {
-        return FileImage(widget.image);
-      } else if (widget.imageType == ImageType.url) {
-        return NetworkImage(widget.image);
-      } else if (widget.imageType == ImageType.asset) {
-        return AssetImage(widget.image);
+      if (widget.controller.imageType == ImageType.file) {
+        return FileImage(widget.controller.image);
+      } else if (widget.controller.imageType == ImageType.url) {
+        return NetworkImage(widget.controller.image);
+      } else if (widget.controller.imageType == ImageType.asset) {
+        return AssetImage(widget.controller.image);
       }
     } else {
-      if (widget.imageType == ImageType.file) {
+      if (widget.controller.imageType == ImageType.file) {
         return Image.file(
-          widget.image,
+          widget.controller.image,
           fit: BoxFit.cover,
           width: widget.width ?? 280,
           height: widget.height ?? 280,
         );
-      } else if (widget.imageType == ImageType.url) {
+      } else if (widget.controller.imageType == ImageType.url) {
         return Image.network(
-          widget.image,
+          widget.controller.image,
           fit: BoxFit.cover,
           width: widget.width ?? 280,
           height: widget.height ?? 280,
         );
-      } else if (widget.imageType == ImageType.asset) {
+      } else if (widget.controller.imageType == ImageType.asset) {
         return Image.asset(
-          widget.image,
+          widget.controller.image,
           fit: BoxFit.cover,
           width: widget.width ?? 280,
           height: widget.height ?? 280,
@@ -112,151 +100,115 @@ class _CustomizableImageCropperState extends State<CustomizableImageCropper> {
     }
   }
 
-  Future saveImage() async {
-    // Get the boundary object for the RenderRepaintBoundary
-    RenderRepaintBoundary? boundaryObject =
-        globalKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
-    if (boundaryObject == null) return;
-
-    // Capture the image from the boundary object
-    ui.Image image = await boundaryObject.toImage();
-    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    if (byteData == null) return;
-
-    // Convert the byte data to Uint8List
-    Uint8List bytes = byteData.buffer.asUint8List();
-
-    final directory = await getApplicationDocumentsDirectory();
-
-    cropedImageFile = File('${directory.path}/image.png');
-    await cropedImageFile.writeAsBytes(bytes);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return isLoading
+    return widget.controller.isLoading
         ? const CircularProgressIndicator()
         : Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                isCroped
-                    ? Center(
-                        child: Image.file(
-                          cropedImageFile,
-                          width: widget.width ?? 280,
-                          height: widget.height ?? 280,
-                        ),
-                      )
-                    : Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: getImageWidget(0),
-                            fit: BoxFit.cover,
-                            opacity: 0.32,
-                          ),
-                        ),
-                        child: CustomPaint(
-                          foregroundPainter: MyCstmPainter(
-                            lineColor: lineColor,
-                            lineWidth: 3,
-                            linePoints: [
-                              // Top Left - Top Right
-                              [
-                                Offset(
-                                  tlX + (pointSize / 2),
-                                  tlY + (pointSize / 2),
-                                ),
-                                Offset(
-                                  trX + (pointSize / 2),
-                                  trY + (pointSize / 2),
-                                ),
-                              ],
-                              // Top Right - Bottom Right
-                              [
-                                Offset(
-                                  trX + (pointSize / 2),
-                                  trY + (pointSize / 2),
-                                ),
-                                Offset(
-                                  brX + (pointSize / 2),
-                                  brY + (pointSize / 2),
-                                ),
-                              ],
-                              // Bottom Right - Bottom Left
-                              [
-                                Offset(
-                                  brX + (pointSize / 2),
-                                  brY + (pointSize / 2),
-                                ),
-                                Offset(
-                                  blX + (pointSize / 2),
-                                  blY + (pointSize / 2),
-                                ),
-                              ],
-                              // Bottom Left - Top Left
-                              [
-                                Offset(
-                                  blX + (pointSize / 2),
-                                  blY + (pointSize / 2),
-                                ),
-                                Offset(
-                                  tlX + (pointSize / 2),
-                                  tlY + (pointSize / 2),
-                                ),
-                              ],
-                            ],
-                          ),
-                          child: Stack(
-                            children: [
-                              RepaintBoundary(
-                                key: globalKey,
-                                child: ClipPath(
-                                  clipper: MyImageClipper(
-                                    points: [
-                                      Offset(
-                                        tlX + (pointSize / 2),
-                                        tlY + (pointSize / 2),
-                                      ),
-                                      Offset(
-                                        trX + (pointSize / 2),
-                                        trY + (pointSize / 2),
-                                      ),
-                                      Offset(
-                                        brX + (pointSize / 2),
-                                        brY + (pointSize / 2),
-                                      ),
-                                      Offset(
-                                        blX + (pointSize / 2),
-                                        blY + (pointSize / 2),
-                                      ),
-                                    ],
-                                  ),
-                                  child: getImageWidget(1),
-                                ),
-                              ),
-                              pointTL(),
-                              pointTR(),
-                              pointBL(),
-                              pointBR(),
-                            ],
-                          ),
-                        ),
+            padding: widget.padding ?? const EdgeInsets.all(24.0),
+            child: widget.controller.isCroped
+                ? Center(
+                    child: Image.file(
+                      widget.controller.cropedImageFile,
+                      width: widget.width ?? 280,
+                      height: widget.height ?? 280,
+                    ),
+                  )
+                : Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: getImageWidget(0),
+                        fit: BoxFit.cover,
+                        opacity: 0.32,
                       ),
-                ElevatedButton(
-                  style: widget.buttonStyle ?? null,
-                  onPressed: () async {
-                    changeLoading();
-                    await saveImage();
-                    widget.onCrop!(cropedImageFile);
-                    changeCropState();
-                    changeLoading();
-                  },
-                  child: Text(widget.buttonTitle ?? "Save Image"),
-                )
-              ],
-            ),
+                    ),
+                    child: CustomPaint(
+                      foregroundPainter: MyCstmPainter(
+                        lineColor: lineColor,
+                        lineWidth: 3,
+                        linePoints: [
+                          // Top Left - Top Right
+                          [
+                            Offset(
+                              tlX + (pointSize / 2),
+                              tlY + (pointSize / 2),
+                            ),
+                            Offset(
+                              trX + (pointSize / 2),
+                              trY + (pointSize / 2),
+                            ),
+                          ],
+                          // Top Right - Bottom Right
+                          [
+                            Offset(
+                              trX + (pointSize / 2),
+                              trY + (pointSize / 2),
+                            ),
+                            Offset(
+                              brX + (pointSize / 2),
+                              brY + (pointSize / 2),
+                            ),
+                          ],
+                          // Bottom Right - Bottom Left
+                          [
+                            Offset(
+                              brX + (pointSize / 2),
+                              brY + (pointSize / 2),
+                            ),
+                            Offset(
+                              blX + (pointSize / 2),
+                              blY + (pointSize / 2),
+                            ),
+                          ],
+                          // Bottom Left - Top Left
+                          [
+                            Offset(
+                              blX + (pointSize / 2),
+                              blY + (pointSize / 2),
+                            ),
+                            Offset(
+                              tlX + (pointSize / 2),
+                              tlY + (pointSize / 2),
+                            ),
+                          ],
+                        ],
+                      ),
+                      child: Stack(
+                        children: [
+                          RepaintBoundary(
+                            key: widget.controller.globalKey,
+                            child: ClipPath(
+                              clipper: MyImageClipper(
+                                points: [
+                                  Offset(
+                                    tlX + (pointSize / 2),
+                                    tlY + (pointSize / 2),
+                                  ),
+                                  Offset(
+                                    trX + (pointSize / 2),
+                                    trY + (pointSize / 2),
+                                  ),
+                                  Offset(
+                                    brX + (pointSize / 2),
+                                    brY + (pointSize / 2),
+                                  ),
+                                  Offset(
+                                    blX + (pointSize / 2),
+                                    blY + (pointSize / 2),
+                                  ),
+                                ],
+                              ),
+                              child: getImageWidget(1),
+                            ),
+                          ),
+                          pointTL(),
+                          pointTR(),
+                          pointBL(),
+                          pointBR(),
+                        ],
+                      ),
+                    ),
+                  ),
           );
   }
 
@@ -358,5 +310,42 @@ class _CustomizableImageCropperState extends State<CustomizableImageCropper> {
         border: Border.all(color: pointColor, width: 1.5),
       ),
     );
+  }
+}
+
+class CropController extends ChangeNotifier {
+  final ImageType imageType;
+  final dynamic image;
+
+  CropController({
+    required this.imageType,
+    this.image,
+  });
+
+  bool isCroped = false;
+  bool isLoading = false;
+  final globalKey = GlobalKey();
+  File cropedImageFile = File('');
+
+  Future<void> crop() async {
+    // Get the boundary object for the RenderRepaintBoundary
+    RenderRepaintBoundary? boundaryObject =
+        globalKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+    if (boundaryObject == null) return;
+
+    // Capture the image from the boundary object
+    ui.Image image = await boundaryObject.toImage();
+    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    if (byteData == null) return;
+
+    // Convert the byte data to Uint8List
+    Uint8List bytes = byteData.buffer.asUint8List();
+
+    final directory = await getApplicationDocumentsDirectory();
+
+    cropedImageFile = File('${directory.path}/cropedImage.png');
+    isCroped = true;
+    notifyListeners();
+    await cropedImageFile.writeAsBytes(bytes);
   }
 }

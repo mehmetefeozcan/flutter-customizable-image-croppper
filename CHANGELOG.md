@@ -1,3 +1,7 @@
+## 0.1.0
+
+Add CropController and changes
+
 ## 0.0.6
 
 Add Button Properties
