@@ -23,6 +23,7 @@ class CustomizableImageCropper extends StatefulWidget {
   final double? height;
   final ButtonStyle? buttonStyle;
   final String? buttonTitle;
+  final Function(dynamic image)? onCrop;
 
   const CustomizableImageCropper({
     required this.imageType,
@@ -30,6 +31,7 @@ class CustomizableImageCropper extends StatefulWidget {
     this.buttonStyle,
     this.buttonTitle,
     this.height,
+    this.onCrop,
     this.width,
     super.key,
   });
@@ -247,6 +249,7 @@ class _CustomizableImageCropperState extends State<CustomizableImageCropper> {
                   onPressed: () async {
                     changeLoading();
                     await saveImage();
+                    widget.onCrop!(cropedImageFile);
                     changeCropState();
                     changeLoading();
                   },

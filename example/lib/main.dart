@@ -24,17 +24,22 @@ class MyComp extends StatefulWidget {
 }
 
 class _MyCompState extends State<MyComp> {
+  late dynamic myImage;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("My Library"),
       ),
-      body: const Center(
+      body: Center(
         child: CustomizableImageCropper(
           imageType: ImageType.url,
           image: "https://picsum.photos/id/234/200/200",
           buttonTitle: "Kaydet",
+          onCrop: (image) {
+            myImage = image;
+          },
         ),
       ),
     );
