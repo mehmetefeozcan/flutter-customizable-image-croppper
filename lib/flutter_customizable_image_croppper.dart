@@ -78,21 +78,21 @@ class _CustomizableImageCropperState extends State<CustomizableImageCropper> {
       if (widget.controller.imageType == ImageType.file) {
         return Image.file(
           widget.controller.image,
-          fit: BoxFit.cover,
+          fit: BoxFit.fill,
           width: widget.width ?? 280,
           height: widget.height ?? 280,
         );
       } else if (widget.controller.imageType == ImageType.url) {
         return Image.network(
           widget.controller.image,
-          fit: BoxFit.cover,
+          fit: BoxFit.fill,
           width: widget.width ?? 280,
           height: widget.height ?? 280,
         );
       } else if (widget.controller.imageType == ImageType.asset) {
         return Image.asset(
           widget.controller.image,
-          fit: BoxFit.cover,
+          fit: BoxFit.fill,
           width: widget.width ?? 280,
           height: widget.height ?? 280,
         );
@@ -118,7 +118,7 @@ class _CustomizableImageCropperState extends State<CustomizableImageCropper> {
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: getImageWidget(0),
-                        fit: BoxFit.cover,
+                        fit: BoxFit.fill,
                         opacity: 0.32,
                       ),
                     ),
