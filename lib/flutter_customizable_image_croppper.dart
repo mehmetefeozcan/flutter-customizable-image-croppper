@@ -2,6 +2,8 @@
 
 library flutter_customizable_image_croppper;
 
+import 'dart:math';
+
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -332,14 +334,14 @@ class CropController extends ChangeNotifier {
   final globalKey = GlobalKey();
   File cropedImageFile = File('');
 
-  Future<void> crop() async {
+  Future crop() async {
     // Get the boundary object for the RenderRepaintBoundary
     RenderRepaintBoundary? boundaryObject =
         globalKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
     if (boundaryObject == null) return;
 
     // Capture the image from the boundary object
-    ui.Image image = await boundaryObject.toImage();
+    ui.Image image = await boundaryObject.toImage(pixelRatio: 1.1);
     ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     if (byteData == null) return;
 
@@ -348,9 +350,13 @@ class CropController extends ChangeNotifier {
 
     final directory = await getApplicationDocumentsDirectory();
 
-    cropedImageFile = File('${directory.path}/cropedImage.png');
+    Random rnd = Random();
+    int num = rnd.nextInt(10);
+
+    cropedImageFile = File('${directory.path}/cropedImage$num.png');
     isCroped = true;
     notifyListeners();
-    await cropedImageFile.writeAsBytes(bytes);
+    final file = await cropedImageFile.writeAsBytes(bytes);
+    return file;
   }
 }
