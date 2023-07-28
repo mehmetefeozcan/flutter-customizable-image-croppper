@@ -18,19 +18,21 @@ enum ImageType { url, file, asset }
 
 class CustomizableImageCropper extends StatefulWidget {
   final CropController controller;
-  final bool isCircle;
   final EdgeInsets? padding;
   final double borderWidth;
   final Color borderColor;
   final Color pointColor;
+  final Color lineColor;
   final double? height;
   final double? width;
+  final bool isCircle;
 
   const CustomizableImageCropper({
     this.pointColor = const Color(0xFFA0A1A0),
     this.borderColor = Colors.black,
-    this.isCircle = false,
+    this.lineColor = Colors.black,
     required this.controller,
+    this.isCircle = false,
     this.borderWidth = 1,
     this.height = 280,
     this.width = 280,
@@ -58,8 +60,6 @@ class _CustomizableImageCropperState extends State<CustomizableImageCropper> {
   double brY = 260;
 
   double pointSize = 20;
-
-  Color lineColor = Colors.black;
 
   changeCropState() {
     setState(() {
@@ -136,7 +136,7 @@ class _CustomizableImageCropperState extends State<CustomizableImageCropper> {
                     ),
                     child: CustomPaint(
                       foregroundPainter: MyCstmPainter(
-                        lineColor: lineColor,
+                        lineColor: widget.lineColor,
                         lineWidth: 3,
                         linePoints: [
                           // Top Left - Top Right
