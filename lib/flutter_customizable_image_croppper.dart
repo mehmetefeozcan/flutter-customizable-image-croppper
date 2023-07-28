@@ -2,8 +2,6 @@
 
 library flutter_customizable_image_croppper;
 
-import 'dart:math';
-
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -351,12 +349,9 @@ class CropController extends ChangeNotifier {
 
     final directory = await getApplicationDocumentsDirectory();
 
-    Random rnd = Random();
-    int num = rnd.nextInt(10);
-
-    cropedImageFile = File('${directory.path}/cropedImage$num.png');
+    cropedImageFile = File('${directory.path}/cropedImage.png');
     isCroped = true;
-    notifyListeners();
     await cropedImageFile.writeAsBytes(bytes);
+    notifyListeners();
   }
 }
