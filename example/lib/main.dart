@@ -52,7 +52,7 @@ class _MyCompState extends State<MyComp> {
               child: Text(cropController.isCroped ? "İptal" : "Kaydet"),
               onPressed: () async {
                 await cropController.crop();
-
+                print(cropController.cropedImageFile);
                 setState(() {});
               },
             ),

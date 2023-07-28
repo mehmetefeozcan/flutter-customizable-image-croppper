@@ -334,7 +334,8 @@ class CropController extends ChangeNotifier {
   final globalKey = GlobalKey();
   File cropedImageFile = File('');
 
-  Future crop() async {
+  Future<void> crop() async {
+    isCroped = false;
     // Get the boundary object for the RenderRepaintBoundary
     RenderRepaintBoundary? boundaryObject =
         globalKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
@@ -356,7 +357,6 @@ class CropController extends ChangeNotifier {
     cropedImageFile = File('${directory.path}/cropedImage$num.png');
     isCroped = true;
     notifyListeners();
-    final file = await cropedImageFile.writeAsBytes(bytes);
-    return file;
+    await cropedImageFile.writeAsBytes(bytes);
   }
 }
